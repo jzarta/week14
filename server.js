@@ -1,44 +1,66 @@
-//=======================================================
-// Dependencies
-// npm packages to give our server useful functionality
-//=======================================================
+// ==============================================================================
+// DEPENDENCIES
+// Series of npm packages that we will use to give our server useful functionality
+// ==============================================================================
 
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var exphbs = require('express-handlebars');
 
-//============================================
-//EXPRESS CONFIGURATION
-//Sets up basic properties for ex[ress server
-//============================================
 
-var app = express(); // Call node that I am creating an "express" server
-var PORT = process.enve.PORT || 8080; // Sets an initial port.
 
-//BodyParser makes it easy for my server to interpret data sent to it.
-//The code below is pretty standar.
 
+// ==============================================================================
+// EXPRESS CONFIGURATION
+// This sets up the basic properties for our express server 
+// ==============================================================================
+
+var app = express(); // Tells node that we are creating an "express" server
+var PORT = process.env.PORT || 8080; // Sets an initial port. We'll use this later in our listener
+
+// why does this need to be lower?
+
+app.engine('handlebars', exphbs({
+	defaultLayout: 'home'
+}));
+
+app.set('view engine', 'handlebars');
+
+// BodyParser makes it easy for our server to interpret data sent to it.
+// The code below is pretty standard.
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded{extended: true}));
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.text());
-app.use(bodyParser.json({type: 'application/vnd.api+json'}));
+app.use(bodyParser.json({type:'application/vnd.api+json'}));
 
 
-//===================================
-//ROUTER 
-//Points our server to a series of "route" files.
-//These routes give our server a "map" o "way" of how to respond when users visit or request data from various URLs.
-//===================================
 
-require('./app/routing/api-routes.js')(app);
-require('./app/routing/html-routes.js')(app);
 
-//==================================
-//LISTENER
-// This code "starts" our server
-//==================================
 
-app.listen(PORT, function () {
-	console.log("App listening on PORT:" + PORT);
-}
+
+
+// ================================================================================
+// ROUTER
+// The below points our server to a series of "route" files.
+// These routes give our server a "map" of how to respond when users visit or request data from various URLs. 
+// ================================================================================
+
+require('./routing/api-routes.js')(app); 
+require('./routing/html-routes.js')(app);
+
+
+
+
+
+
+
+
+// ==============================================================================
+// LISTENER
+// The below code effectively "starts" our server 
+// ==============================================================================
+
+app.listen(PORT, function() {
+	console.log("App listening on PORT: " + PORT);
+});
